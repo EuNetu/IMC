@@ -1,3 +1,19 @@
 <resources>
     <string name="app_name">IMC</string>
+    <string name="calcular">Calcular</string>
+    <string name="_0_00">0.00</string>
+    <string name="alterar_peso">Alterar Peso</string>
+    <string name="alterar_altura">Alterar Altura</string>
+    <string name="resultado">Resultado</string>
+    <string name="seu_estado">Seu Estado</string>
+    <string name="calculadora_imc">Calculadora IMC</string>
+    <string name="altura">Altura:</string>
+    <string name="peso">Peso</string>
+    <string name="m">M</string>
+    <string name="kg">Kg</string>
+    <string name="x">x:</string>
+    <string name="cancelar">Cancelar</string>
+    <string name="alterar">Alterar</string>
+    <string name="aperte_o_bot_o_calcular">Aperte o botão calcular!</string>
+    <string name="alterar_dados">Alterar dados</string>
 </resources>

@@ -1,35 +1,77 @@
 package tads.eaj.ufrn.imc
 
+import android.app.Activity
 import android.content.Intent
+import android.databinding.DataBindingUtil
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
+import tads.eaj.ufrn.imc.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
+    lateinit var binding:ActivityMainBinding
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
 
-        val buttonAltura:Button = findViewById(R.id.buttonAltura)
+
+        super.onCreate(savedInstanceState)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
+
+
+        val buttonAltura: Button = findViewById(R.id.buttonAltura)
         buttonAltura.setOnClickListener {
-            val intent = Intent(this,MandaDadosActivity::class.java)
-            startActivity(intent)
+            val intent = Intent(this, MandaDadosActivity::class.java)
+
+            startActivityForResult(intent, 99)
         }
-        val buttonPeso:Button = findViewById(R.id.buttonPeso)
+        val buttonPeso: Button = findViewById(R.id.buttonPeso)
         buttonPeso.setOnClickListener {
-            val intent = Intent(this,MandaDadosActivity::class.java)
-            startActivity(intent)
+            val intent = Intent(this, MandaDadosActivity::class.java)
+            startActivityForResult(intent, 100)
         }
 
         val buttonCalcular = findViewById<Button>(R.id.buttonCalcular)
         buttonCalcular.setOnClickListener {
-            val textViewAltura:TextView = findViewById(R.id.textViewAltura)
-            val textViewPeso:TextView = findViewById(R.id.textViewPeso)
-            calcularIMC(textViewAltura.text.toString(),textViewPeso.text.toString())
+            val textViewAltura: TextView = findViewById(R.id.textViewAltura)
+            val textViewPeso: TextView = findViewById(R.id.textViewPeso)
+            calcularIMC(textViewAltura.text.toString(), textViewPeso.text.toString())
         }
     }
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        when(requestCode){
+            99->{
+                when(resultCode){
+                    Activity.RESULT_OK->{
+                        val param = data?.extras
+                        val resultado = param?.getString("DADOS")
+                        val textViewAltura:TextView = findViewById(R.id.textViewAltura)
+                        textViewAltura.text = resultado
+                    }
+                    Activity.RESULT_CANCELED->{
+                        Toast.makeText(this, "Cancelou", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+            100->{
+                when(resultCode){
+                    Activity.RESULT_OK->{
+                        val param = data?.extras
+                        val resultado = param?.getString("DADOS")
+                        val textViewPeso:TextView = findViewById(R.id.textViewPeso)
+                        textViewPeso.text = resultado
+                    }
+                    Activity.RESULT_CANCELED->{
+                        Toast.makeText(this, "Cancelou", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+        }
+    }
+
+
+
     fun calcularIMC(altura:String, peso:String){
         val altura = altura.toFloatOrNull()
         val peso = peso.toFloatOrNull()
@@ -58,8 +100,20 @@ class MainActivity : AppCompatActivity() {
             else if (imc>=40) {textViewInformacao.text = informacaoResultado[7]}
 
         }else{
-            Toast.makeText(this@MainActivity, "Digite um valor Válido!", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Erro no calculo!", Toast.LENGTH_SHORT).show()
         }
     }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        super.onRestoreInstanceState(savedInstanceState)
+        binding.textViewAltura.text = savedInstanceState.getString("valor_altura")
+        binding.textViewPeso.text = savedInstanceState.getString("valor_peso")
+    }
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putString("valor_altura", binding.textViewAltura.text.toString())
+        outState.putString("valor_peso", binding.textViewPeso.text.toString())
+    }
+
 }
 
